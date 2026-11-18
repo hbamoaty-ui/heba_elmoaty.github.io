@@ -440,3 +440,7 @@ section{padding-block:clamp(64px,9vw,112px)}
 .alist{border-top:0;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:0 clamp(18px,3vw,32px)}
 .alist li:last-child{border-bottom:0}
 .empty-note{background:var(--surface)}
+
+.gallery-web{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px}
+.gallery-web .zoom{background:#fff}
+.nda-note{margin-top:20px;font-size:.86rem;color:var(--muted);border-inline-start:2px solid var(--line);padding-inline-start:12px}
