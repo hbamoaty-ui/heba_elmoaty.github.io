@@ -1,0 +1,61 @@
+---
+layout: null
+title: Articles
+description: Articles on UX writing, content design, and bilingual Arabic and English product writing by Heba Abd Elmoaaty.
+---
+<!doctype html>
+<html lang="en">
+<head>
+{% include head.html %}
+</head>
+<body>
+{% include header.html %}
+<main id="top">
+  <section class="page-head">
+    <div class="wrap">
+      <p class="label">Articles · <span lang="ar">مقالات</span></p>
+      <h1>On writing for products.</h1>
+      <p class="lede">Notes on content design, bilingual writing systems, and the small decisions that make products feel human. Written in English and Arabic.</p>
+      {% assign ar_count = site.posts | where: "lang", "ar" | size %}{% assign en_count = site.posts.size | minus: ar_count %}
+      {% if site.posts.size > 0 %}
+      <div class="filters" role="group" aria-label="Filter by language">
+        <button class="filter" type="button" data-f="all" aria-pressed="true">All ({{ site.posts.size }})</button>
+        {% if en_count > 0 %}<button class="filter" type="button" data-f="en" aria-pressed="false">English ({{ en_count }})</button>{% endif %}
+        {% if ar_count > 0 %}<button class="filter" type="button" data-f="ar" aria-pressed="false"><bdi lang="ar">العربية</bdi> ({{ ar_count }})</button>{% endif %}
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  <section class="list-section">
+    <div class="wrap">
+      {% if site.posts.size > 0 %}
+      <ul class="alist" id="alist">
+        {% for p in site.posts %}{% assign isar = false %}{% if p.lang == 'ar' %}{% assign isar = true %}{% endif %}{% assign words = p.content | strip_html | number_of_words %}{% assign mins = words | divided_by: 200 | plus: 1 %}
+        <li data-lang="{{ p.lang | default: 'en' }}">
+          <a class="arow" href="{{ p.url | relative_url }}">
+            <time datetime="{{ p.date | date: '%Y-%m-%d' }}">{{ p.date | date: "%b %-d, %Y" }}</time>
+            <span>
+              <span class="acard-t" style="display:block"{% if isar %} lang="ar" dir="rtl"{% endif %}>{{ p.title }}</span>
+              {% if p.description %}<span class="acard-d" style="display:block"{% if isar %} lang="ar" dir="rtl"{% endif %}>{{ p.description }}</span>{% endif %}
+            </span>
+            <span class="arow-side"><span class="post-lang">{% if isar %}العربية{% else %}English{% endif %}</span><span class="label">{{ mins }} min</span></span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <p class="empty-note">New articles are on their way. Meanwhile, read my earlier writing on <a class="textlink" href="https://medium.com/@hbamoaty" target="_blank" rel="noopener">Medium ↗</a></p>
+      {% endif %}
+      <p style="margin-top:32px"><a class="textlink" href="https://medium.com/@hbamoaty" target="_blank" rel="noopener">Earlier articles on Medium ↗</a></p>
+    </div>
+  </section>
+</main>
+{% include footer.html %}
+<script>
+(function(){var bs=[].slice.call(document.querySelectorAll('.filter')),rows=[].slice.call(document.querySelectorAll('#alist li'));
+bs.forEach(function(b){b.addEventListener('click',function(){var f=b.getAttribute('data-f');
+bs.forEach(function(o){o.setAttribute('aria-pressed',o===b?'true':'false');});
+rows.forEach(function(r){r.hidden=!(f==='all'||r.getAttribute('data-lang')===f);});});});})();
+</script>
+</body>
+</html>

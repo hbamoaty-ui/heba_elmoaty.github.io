@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="{{ page.lang | default: 'en' }}"{% if page.lang == 'ar' %} dir="rtl"{% endif %}>
+<head>
+{% include head.html %}
+</head>
+<body>
+<div dir="ltr" lang="en">{% include header.html %}</div>
+{% assign words = content | strip_html | number_of_words %}{% assign mins = words | divided_by: 200 | plus: 1 %}{% assign isar = false %}{% if page.lang == 'ar' %}{% assign isar = true %}{% endif %}
+<main id="top">
+  <article class="article">
+    <div class="a-wrap">
+      <a class="back" href="{{ '/articles/' | relative_url }}">{% if isar %}→ كل المقالات{% else %}← All articles{% endif %}</a>
+      <p class="a-meta">
+        <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%B %-d, %Y" }}</time>
+        <span aria-hidden="true">·</span>
+        <span>{% if isar %}{% if mins == 1 %}دقيقة قراءة{% elsif mins == 2 %}دقيقتا قراءة{% elsif mins <= 10 %}{{ mins }} دقائق قراءة{% else %}{{ mins }} دقيقة قراءة{% endif %}{% else %}{{ mins }} min read{% endif %}</span>
+        <span class="post-lang">{% if isar %}العربية{% else %}English{% endif %}</span>
+      </p>
+      <h1 class="a-title">{{ page.title }}</h1>
+      {% if page.description %}<p class="a-dek">{{ page.description }}</p>{% endif %}
+      {% if page.cover %}<figure class="a-cover"><img src="{{ page.cover | relative_url }}" alt="{{ page.cover_alt | default: '' }}">{% if page.cover_caption %}<figcaption>{{ page.cover_caption }}</figcaption>{% endif %}</figure>{% endif %}
+
+      <div class="a-body">
+{{ content }}
+      </div>
+
+      <div class="a-foot">
+        {% if page.tags.size > 0 %}<ul class="chips" aria-label="Tags">{% for t in page.tags %}<li>{{ t }}</li>{% endfor %}</ul>{% endif %}
+        <div class="a-share">
+          <span class="label">{% if isar %}شارك المقال{% else %}Share{% endif %}</span>
+          <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ page.url | absolute_url | uri_escape }}" target="_blank" rel="noopener">LinkedIn ↗</a>
+          <a href="https://x.com/intent/post?url={{ page.url | absolute_url | uri_escape }}&text={{ page.title | uri_escape }}" target="_blank" rel="noopener">X ↗</a>
+          <button type="button" id="copy-link" data-done="{% if isar %}تم النسخ{% else %}Copied{% endif %}">{% if isar %}انسخ الرابط{% else %}Copy link{% endif %}</button>
+        </div>
+        <div class="author" dir="ltr" lang="en">
+          <p><b>Heba Abd Elmoaaty</b> — Senior UX Writer and Content Design Strategist. I design bilingual Arabic and English content systems for SaaS products. <a class="textlink" href="{{ '/' | relative_url }}#contact">Get in touch</a></p>
+        </div>
+        {% if page.previous or page.next %}
+        <nav class="a-nav" aria-label="{% if isar %}مقالات أخرى{% else %}More articles{% endif %}">
+          {% if page.previous %}<a class="prev" href="{{ page.previous.url | relative_url }}"><span class="label">{% if isar %}الأقدم{% else %}← Older{% endif %}</span><b{% if page.previous.lang == 'ar' %} lang="ar" dir="rtl" class="ar"{% endif %}>{{ page.previous.title }}</b></a>{% endif %}
+          {% if page.next %}<a class="next" href="{{ page.next.url | relative_url }}"><span class="label">{% if isar %}الأحدث{% else %}Newer →{% endif %}</span><b{% if page.next.lang == 'ar' %} lang="ar" dir="rtl" class="ar"{% endif %}>{{ page.next.title }}</b></a>{% endif %}
+        </nav>
+        {% endif %}
+      </div>
+    </div>
+  </article>
+</main>
+<div dir="ltr" lang="en">{% include footer.html %}</div>
+<script>
+(function(){var b=document.getElementById('copy-link');if(!b)return;var label=b.textContent;
+b.addEventListener('click',function(){var u=location.href.split('#')[0];
+function done(){b.textContent=b.getAttribute('data-done');setTimeout(function(){b.textContent=label;},1800);}
+if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(u).then(done,function(){prompt('Copy this link:',u);});}else{prompt('Copy this link:',u);}});})();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% assign p = include.post %}{% assign words = p.content | strip_html | number_of_words %}{% assign mins = words | divided_by: 200 | plus: 1 %}
+<a class="acard" href="{{ p.url | relative_url }}">
+  {% if p.cover %}<span class="acard-img"><img src="{{ p.cover | relative_url }}" alt="" loading="lazy"></span>{% endif %}
+  <span class="acard-body">
+    <span class="post-meta"><time datetime="{{ p.date | date: '%Y-%m-%d' }}">{{ p.date | date: "%b %Y" }} · {{ mins }} min read</time><span class="post-lang">{% if p.lang == 'ar' %}العربية{% else %}English{% endif %}</span></span>
+    <span class="acard-t"{% if p.lang == 'ar' %} lang="ar" dir="rtl"{% endif %}>{{ p.title }}</span>
+    {% if p.description %}<span class="acard-d"{% if p.lang == 'ar' %} lang="ar" dir="rtl"{% endif %}>{{ p.description }}</span>{% endif %}
+    <span class="post-go"{% if p.lang == 'ar' %} lang="ar" dir="rtl"{% endif %}>{% if p.lang == 'ar' %}اقرأ المقال ←{% else %}Read article →{% endif %}</span>
+  </span>
+</a>

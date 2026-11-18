@@ -1,0 +1,28 @@
+# Site settings — GitHub Pages builds this with Jekyll automatically.
+title: Heba Abd Elmoaaty
+description: Senior UX Writer and Content Design Strategist. I design bilingual Arabic and English content systems for SaaS products.
+author: Heba Abd Elmoaaty
+url: "https://hbamoaty-ui.github.io"
+baseurl: "/heba_elmoaty.github.io"   # the repository name
+
+# Articles live at /articles/<file-name>/
+permalink: /articles/:title/
+timezone: Africa/Cairo
+markdown: kramdown
+kramdown:
+  input: GFM
+  auto_ids: true
+
+plugins:
+  - jekyll-feed            # builds /feed.xml (RSS) from your articles
+
+feed:
+  path: feed.xml
+
+defaults:
+  - scope: { path: "", type: posts }
+    values: { layout: post, lang: en }
+
+exclude:
+  - README.md
+  - HOW-TO-PUBLISH.md

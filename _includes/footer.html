@@ -1,0 +1,69 @@
+{% assign home = '/' | relative_url %}{% if page.url == '/' %}{% assign home = '' %}{% endif %}
+<footer class="site-foot" id="contact">
+  <div class="wrap">
+    <div class="foot-card">
+      <div class="foot-top">
+        <div class="foot-hello">
+          <p class="label">Available for collaboration</p>
+          <h2>Hello. <span class="ar" lang="ar">أهلاً وسهلاً.</span></h2>
+          <p>Whether your product speaks English, Arabic, or both, I'd love to hear what you're building. Send me a message, and I'll get back to you within a day or two.</p>
+          <div class="mail">
+            <output id="email">hbamoaty@gmail.com</output>
+            <button class="btn primary sm" id="copy" type="button">Copy email</button>
+          </div>
+        </div>
+        <aside class="quote-card" aria-label="Featured use cases">
+          <span class="qtag" id="q-tag">Use case</span>
+          <p class="q" id="q-text">“From ‘Something went wrong’ to errors that help.”</p>
+          <p class="q-src" id="q-src">Lucidya: rewriting error messages in Arabic and English</p>
+          <div class="q-row">
+            <a class="btn primary sm" id="q-link" href="{{ home }}#case-6">Read use case</a>
+            <span class="q-dots" aria-hidden="true"><i class="on"></i><i></i><i></i><i></i></span>
+          </div>
+        </aside>
+      </div>
+      <div class="foot-cols">
+        <div><p class="label">Explore</p><ul><li><a href="{{ home }}#work">Use cases</a></li><li><a href="{{ '/articles/' | relative_url }}">Articles</a></li><li><a href="{{ home }}#experience">Experience</a></li></ul></div>
+        <div><p class="label">Profile</p><ul><li><a href="{{ home }}#about">About</a></li><li><a href="{{ '/Heba_AbdElmoaty_CV.pdf' | relative_url }}" target="_blank" rel="noopener">CV (PDF)</a></li><li><a href="{{ '/feed.xml' | relative_url }}">RSS</a></li></ul></div>
+        <div><p class="label">Connect</p><ul><li><a href="https://www.linkedin.com/in/heba-abd-elmoaaty-635356113/" target="_blank" rel="noopener">LinkedIn ↗</a></li><li><a href="https://medium.com/@hbamoaty" target="_blank" rel="noopener">Medium ↗</a></li><li><a href="https://www.behance.net/hebaahmed56" target="_blank" rel="noopener">Behance ↗</a></li><li><a href="https://wa.me/201008500537" target="_blank" rel="noopener">WhatsApp ↗</a></li></ul></div>
+      </div>
+      <p class="wordmark" aria-hidden="true">Heba Abd Elmoaaty</p>
+      <div class="foot-legal"><span>© {{ site.time | date: "%Y" }} Heba Abd Elmoaaty</span><span>Written in English and <span lang="ar">العربية</span></span></div>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var root=document.documentElement,b=document.getElementById('theme-toggle');
+  if(b)b.addEventListener('click',function(){
+    var next=root.getAttribute('data-theme')==='light'?'dark':'light';root.setAttribute('data-theme',next);
+    try{localStorage.setItem('theme',next);}catch(e){}
+  });
+  var mb=document.getElementById('menu-btn'),nav=document.getElementById('mainnav');
+  if(mb)mb.addEventListener('click',function(){var o=mb.getAttribute('aria-expanded')!=='true';mb.setAttribute('aria-expanded',o);nav.classList.toggle('open',o);});
+  if(nav)nav.addEventListener('click',function(e){if(e.target.tagName==='A'){mb.setAttribute('aria-expanded','false');nav.classList.remove('open');}});
+
+  var copy=document.getElementById('copy');
+  if(copy)copy.addEventListener('click',function(){
+    var t=document.getElementById('email').textContent;
+    function done(){copy.textContent='Copied';setTimeout(function(){copy.textContent='Copy email';},1800);}
+    function fallback(){var r=document.createRange();r.selectNodeContents(document.getElementById('email'));var sel=getSelection();sel.removeAllRanges();sel.addRange(r);copy.textContent='Press Ctrl+C to copy';}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done,fallback);}else{fallback();}
+  });
+
+  var H='{{ home }}',Q=[
+    ['“From ‘Something went wrong’ to errors that help.”','Lucidya: rewriting error messages in Arabic and English','case-6'],
+    ['“Naming things the way users do, in both languages.”','Lucidya: research-led terminology for Arabic and English','case-3'],
+    ['“One way of writing, in two languages, for every designer.”','Lucidya: a bilingual content design system','case-1'],
+    ['“In investing, unclear words cost trust.”','Awaed: revamping a trading app and launching Al Murabahat','case-4']
+  ],qi=0,qt=document.getElementById('q-text');
+  if(qt&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    var dots=document.querySelectorAll('.q-dots i'),card=qt.closest('.quote-card');
+    setInterval(function(){
+      card.classList.add('fade');
+      setTimeout(function(){qi=(qi+1)%Q.length;qt.textContent=Q[qi][0];document.getElementById('q-src').textContent=Q[qi][1];document.getElementById('q-link').setAttribute('href',H+'#'+Q[qi][2]);
+        dots.forEach(function(d,i){d.classList.toggle('on',i===qi);});card.classList.remove('fade');},350);
+    },6000);
+  }
+})();
+</script>
