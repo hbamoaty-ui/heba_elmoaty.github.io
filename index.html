@@ -182,7 +182,7 @@ layout: null
           <div class="foot"><a class="textlink" href="https://www.lucidya.com/ar" target="_blank" rel="noopener">lucidya.com ↗</a></div>
         </div>
         <div class="gallery">
-          <p class="label">From lucidya.com · select an image to enlarge</p>
+          <p class="label">From lucidya.com · select to view all</p>
           <div class="gallery-web">
             <figure>
               <button type="button" class="zoom" aria-label="Enlarge: <b>Social Listening"><img src="lucidya-social-listening-ar.png" alt="Social Listening visual in Arabic: a posts engagement chart, a dialects breakdown, and positive, negative, and neutral sentiment cards" loading="lazy" width="1506" height="782"></button>
@@ -238,33 +238,6 @@ layout: null
           </div>
         </div>
       </article>
-            <article class="ex">
-              <header><span class="ex-tag live">Live</span><span class="ex-area">OmniServe · metric</span></header>
-              <div class="ex-pair ex-terms">
-                <div class="ex-col ex-after"><span class="ex-label">English</span><p class="term">Average Response Time</p></div>
-                <div class="ex-col ex-after"><span class="ex-label">العربية</span><p class="term" lang="ar" dir="rtl">متوسط وقت الاستجابة</p></div>
-              </div>
-              <ul class="ex-why"><li>A direct, natural phrase instead of a literal word order.</li><li>Pairs with the FRT metric so the two read as a set.</li></ul>
-            </article>
-            <article class="ex">
-              <header><span class="ex-tag live">Live</span><span class="ex-area">OmniServe · customer profile</span></header>
-              <div class="ex-pair ex-terms">
-                <div class="ex-col ex-after"><span class="ex-label">English</span><p class="term">Full profile</p></div>
-                <div class="ex-col ex-after"><span class="ex-label">العربية</span><p class="term" lang="ar" dir="rtl">ملف التعريف الكامل</p></div>
-              </div>
-              <ul class="ex-why"><li>A clear Arabic phrase for the link that opens the customer’s full profile.</li></ul>
-            </article>
-            <article class="ex">
-              <header><span class="ex-tag live">Live</span><span class="ex-area">Social Listening · chart</span></header>
-              <div class="ex-pair ex-terms">
-                <div class="ex-col ex-after"><span class="ex-label">English</span><p class="term">Posts Engagement</p></div>
-                <div class="ex-col ex-after"><span class="ex-label">العربية</span><p class="term" lang="ar" dir="rtl">التفاعل مع المنشورات</p></div>
-              </div>
-              <ul class="ex-why"><li>Reads as a natural Arabic title for the chart, not a translated label.</li></ul>
-            </article>
-          </div>
-        </div>
-      </article>
 
       <article class="panel" role="tabpanel" id="case-4" aria-labelledby="tab-4" hidden>
         <div>
@@ -288,7 +261,7 @@ layout: null
           <div class="foot"><a class="textlink" href="https://awaed.capital/en" target="_blank" rel="noopener">awaed.capital ↗</a></div>
         </div>
         <div class="gallery">
-          <p class="label">In the app · select an image to enlarge</p>
+          <p class="label">In the app · select to view all</p>
           <div class="gallery-phones">
             <figure>
               <button type="button" class="zoom" aria-label="Enlarge: Stocks home screen"><img src="awaed-stocks.png" alt="Stocks home screen: Saudi and US markets, trending stocks, and a stock list" loading="lazy" width="538" height="929"></button>
@@ -386,7 +359,7 @@ layout: null
           <div class="foot"><a class="textlink" href="https://www.lucidya.com/" target="_blank" rel="noopener">lucidya.com ↗</a></div>
         </div>
         <div class="gallery">
-          <p class="label">Inside the system · select an image to enlarge</p>
+          <p class="label">Inside the system · select to view all</p>
           <div class="gallery-grid">
             <figure class="g-tall">
               <button type="button" class="zoom" aria-label="Enlarge: success messages pattern"><img src="cds-success-messages.png" alt="Success messages pattern page with a guideline table for length, phrasing, tone, and case, and snackbar examples with English and Arabic text patterns" loading="lazy" width="726" height="1452"></button>
@@ -661,12 +634,16 @@ layout: null
         </a>
       </div></div>
       </div>
-    </div>
   </section>
 
 </main>
 
-<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Enlarged image"><button type="button" id="lb-close">Close ✕</button><img id="lb-img" alt=""></div>
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Image viewer">
+  <button type="button" class="lb-close" id="lb-close">Close ✕</button>
+  <button type="button" class="lb-nav lb-prev" id="lb-prev" aria-label="Previous image">‹</button>
+  <figure class="lb-fig"><img id="lb-img" alt=""><figcaption id="lb-cap"></figcaption><span class="lb-count" id="lb-count" aria-live="polite"></span></figure>
+  <button type="button" class="lb-nav lb-next" id="lb-next" aria-label="Next image">›</button>
+</div>
 
 {% include footer.html %}
 
@@ -689,12 +666,32 @@ layout: null
     });
   });
 
-  var lb=document.getElementById('lightbox'),lbImg=document.getElementById('lb-img'),lastZoom=null;
-  function closeLb(){lb.hidden=true;lbImg.src='';if(lastZoom)lastZoom.focus();}
-  document.querySelectorAll('.zoom').forEach(function(b){b.addEventListener('click',function(){var i=b.querySelector('img');lbImg.src=i.src;lbImg.alt=i.alt;lastZoom=b;lb.hidden=false;document.getElementById('lb-close').focus();});});
+  // Galleries: show one image, the rest open in a viewer
+  var lb=document.getElementById('lightbox'),lbImg=document.getElementById('lb-img'),lbCap=document.getElementById('lb-cap'),lbCount=document.getElementById('lb-count'),lbPrev=document.getElementById('lb-prev'),lbNext=document.getElementById('lb-next'),set=[],cur=0,lastZoom=null;
+  function show(i){cur=(i+set.length)%set.length;var f=set[cur],im=f.querySelector('img'),c=f.querySelector('figcaption');lbImg.src=im.src;lbImg.alt=im.alt;lbCap.innerHTML=c?c.innerHTML:'';lbCount.textContent=set.length>1?(cur+1)+' / '+set.length:'';lbPrev.hidden=lbNext.hidden=set.length<2;}
+  function openLb(figs,i,from){set=figs;lastZoom=from;show(i);lb.hidden=false;document.body.style.overflow='hidden';document.getElementById('lb-close').focus();}
+  function closeLb(){lb.hidden=true;lbImg.src='';document.body.style.overflow='';if(lastZoom)lastZoom.focus();}
+  document.querySelectorAll('.gallery').forEach(function(g){
+    var figs=[].slice.call(g.querySelectorAll('figure')).filter(function(f){return f.querySelector('.zoom');});
+    figs.forEach(function(f,i){f.querySelector('.zoom').addEventListener('click',function(){openLb(figs,i,this);});});
+    if(figs.length<2)return;
+    g.classList.add('compact');
+    figs.forEach(function(f,i){if(i>0)f.classList.add('g-hide');});
+    g.querySelectorAll('.gallery-phones,.gallery-cards,.gallery-grid,.gallery-web,.more-shots').forEach(function(c){if(!c.contains(figs[0]))c.classList.add('g-hide');});
+    figs[0].classList.add('g-lead');
+    var more=document.createElement('button');more.type='button';more.className='more-badge';
+    more.innerHTML='<span aria-hidden="true">+'+(figs.length-1)+'</span> more photos';
+    more.setAttribute('aria-label','View all '+figs.length+' photos');
+    more.addEventListener('click',function(){openLb(figs,1,more);});
+    figs[0].querySelector('.zoom').after(more);
+  });
+  lbPrev.addEventListener('click',function(){show(cur-1);});
+  lbNext.addEventListener('click',function(){show(cur+1);});
   document.getElementById('lb-close').addEventListener('click',closeLb);
   lb.addEventListener('click',function(e){if(e.target===lb)closeLb();});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden)closeLb();});
+  document.addEventListener('keydown',function(e){if(lb.hidden)return;if(e.key==='Escape')closeLb();else if(e.key==='ArrowRight')show(cur+1);else if(e.key==='ArrowLeft')show(cur-1);});
+  var tx=null;lb.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;},{passive:true});
+  lb.addEventListener('touchend',function(e){if(tx===null)return;var d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>50)show(cur+(d<0?1:-1));tx=null;});
 
   function openFromHash(){var h=location.hash.slice(1);if(!/^case-\d+$/.test(h))return;var t=document.querySelector('[aria-controls="'+h+'"]');if(!t)return;selectTab(t);document.getElementById('work').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}
   window.addEventListener('hashchange',openFromHash);openFromHash();
